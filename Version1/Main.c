@@ -20,7 +20,6 @@
 
 int main(int argc, char const *argv[]){
     if(argc==2){
-        printf("File.%s|\n",argv[1]);
         FILE* F;
         if(access(argv[1],F_OK)!=-1){
             F=fopen(argv[1],"r");
