@@ -1,6 +1,6 @@
 /*******************************************************************************
 | Program: An Implementation of a C interper                                   |
-| Last Updated: 4/4/2019                                                       |
+| Last Updated: 4/4/2019       FCUP       Copyright (c) 2019, Eduardo Morgado  |
 ********************************************************************************
 |   The program functionality:                                                 |
 |       ->The program will be able to implement a small programming language   |
@@ -451,7 +451,8 @@ int execute(int loop,int is_file,FILE* F){
         case GOTO_I:
             if(containsLabel(Labels,STRING(FELEM(I)))==0){
                 printf("Label doesn't exist\n");
-                error(is_file,F);
+                //error(is_file,F);
+                return 1;
             }
             pcGoto(getLabelHash(Labels,STRING(FELEM(I))),Program);
             execute(1,is_file,F);
@@ -464,7 +465,8 @@ int execute(int loop,int is_file,FILE* F){
             }
             if(contains(Vars,STRING(FELEM(I)))==0){
                 printf("Var not initilised\n");
-                error(is_file,F);
+                //error(is_file,F);
+                return 1;
             }
             if(parseFormula(STRING(FELEM(I)),Vars)==0){
                 return 1;
@@ -478,3 +480,4 @@ int execute(int loop,int is_file,FILE* F){
         break;    
     }    
 }
+
