@@ -1,9 +1,11 @@
 /*******************************************************************************
-| Program: A Conceptual defenition of a HashTable for Variables----------------|
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 3/4/2019                                                       |
+| Program: A Conceptual defenition of a HashTable for Variables                |
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 3/4/2019                                                   FCUP|
 ********************************************************************************
-|   This class is supported by the LinkedListsHashVar                          |
+|   Representation:                                                            |
+|       ->A HashTable of vars is and array of lists of variables, as such our  |
+|           table will be the allocated array of lists + its size              |
 *******************************************************************************/
 #include "LinkedListsHashVar.h"
 

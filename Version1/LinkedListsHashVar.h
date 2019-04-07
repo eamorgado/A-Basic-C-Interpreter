@@ -1,15 +1,15 @@
 /*******************************************************************************
-| Program: A Conceptual defenition of a LinkedList------For A Variable Elemenrt|
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 3/4/2019                                                       |
+| Program: A Conceptual defenition of a LinkedList      For A Variable Elemenrt|
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 3/4/2019                                                   FCUP|
 ********************************************************************************
 |   Representation:                                                            |
+|       ->We will consider a list of vars to be of type VarList where we       |
+|           store the pointer to the head of the list (the first node)         |
 |       ->Node is defined by:                                                  |
 |           -The desired value to store, in this case the variable name        |
-|           -The element that stores, can be an integer or a char              |
+|               (The element that is stored, can be an integer or a char)      |
 |           -A pointer to the next node in the list                            |
-|   The list will contain an empty node, first, that points to the very first  |
-|       node in the list.                                                      |
 *******************************************************************************/
 #include "Structures.h"
 

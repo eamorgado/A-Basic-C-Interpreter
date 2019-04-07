@@ -1,13 +1,15 @@
 /*******************************************************************************
-| Program: A Conceptual defenition of a LinkedList------For The Instructions---|
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 3/4/2019                                                       |
+| Program: A Conceptual defenition of a LinkedList For The Instructions        |
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 3/4/2019                                                   FCUP|
 ********************************************************************************
 |   Representation:                                                            |
-|       ->Node is defined by the Instruction that it stores                    |
-|   The list will contain an empty node, first, that points to the very first  |
-|       node in the list and a node called pc that is the program counter for  |
-|       this program                                                           |
+|       ->We will consider a list of Instructions to be of type ProcessGroup   |
+|               where we store the first instruction/process in the list, the  |
+|               last process in order to ease the addition and the pc/program  |
+|               counter that points to the current/next executing process      |
+|       ->Node is defined by the process to execute and a pointer to the next  |
+|               instruction                                                    |
 *******************************************************************************/
 #include "Structures.h"
 
@@ -55,7 +57,6 @@ Process* addProcess(Instr*,ProcessGroup*);
 void nextProcess(ProcessGroup*);
 void pcGoto(Process*,ProcessGroup*);
 int sizeProgram(ProcessGroup*);
-void printProcesses(ProcessGroup*);
 void endExecution(ProcessGroup*);
 void endProcess(Process*,Process*);
 

@@ -480,4 +480,3 @@ int execute(int loop,int is_file,FILE* F){
         break;    
     }    
 }
-

@@ -1,7 +1,7 @@
 /*******************************************************************************
-| Program: Implementation of Parser for expressions                            |
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 4/4/2019                                                       |
+| Program: Implementation of Descendent Parser for expressions                 |
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 4/4/2019                                                   FCUP|
 *******************************************************************************/
 #include "Structures.h"
 #include "HashTableVar.h"

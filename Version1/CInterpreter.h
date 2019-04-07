@@ -1,6 +1,6 @@
 /*******************************************************************************
 | Program: An Implementation of a C interper                                   |
-| Last Updated: 4/4/2019                                                       |
+| Last Updated: 4/4/2019       FCUP       Copyright (c) 2019, Eduardo Morgado  |
 ********************************************************************************
 |   The program functionality:                                                 |
 |       ->The program will be able to implement a small programming language   |

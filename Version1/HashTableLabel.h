@@ -1,7 +1,11 @@
 /*******************************************************************************
-| Program: A Conceptual defenition of a HashTable for Labels-------------------|
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 3/4/2019                                                       |
+| Program: A Conceptual defenition of a HashTable for Labels                   |
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 3/4/2019                                                   FCUP|
+********************************************************************************
+|   Representation:                                                            |
+|       ->A Hashtable of labels is an array of lists of labels, as such,our    |
+|           hashtable will be the allocated array+its size                     |
 *******************************************************************************/
 #include "LinkedListProgramSequence.h"
 #include "LinkedListLabel.h"
@@ -36,7 +40,6 @@ unsigned int hashLabel(char*);
 int containsLabel(HashTableLabel*,char*);
 void putLabel(HashTableLabel*,char*,Process*);
 Process* getLabelHash(HashTableLabel*,char*);
-void printLabelTable(HashTableLabel*);
 void freeLabelTable(HashTableLabel*);
 
 #endif

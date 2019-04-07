@@ -1,13 +1,15 @@
 /*******************************************************************************
-| Program: A Conceptual defenition of a LinkedList------For Label -------------|
-| Author: Eduardo Morgado                                                      |
-| Last Updated: 3/4/2019                                                       |
+| Program: A Conceptual defenition of a LinkedList For Label                   |
+| Author: Eduardo Morgado                 Copyright (c) 2019, Eduardo Morgado  |
+| Last Updated: 3/4/2019                                                   FCUP|
 ********************************************************************************
 |   Representation:                                                            |
-|       ->Node is defined by the name of the label that it stores, plus the    |
-|               the execution process to where it points to                    |
-|   The list will contain an empty node, first, that points to the very first  |
-|       node in the list                                                       |
+|       ->We will consider a list of Labels to be of type LabelList where we   |
+|           store the pointer to the head of the list (the first node)         |
+|       ->Node is defined by the name of the label that it stores in order to  |
+|               locate it in the label memory(HashTableLabel), plus the        |
+|               the execution process to where it points to, that way we can   |
+|               manipulate the program counter to our list of instructions     |
 *******************************************************************************/
 #include "Structures.h"
 #include "LinkedListProgramSequence.h"
