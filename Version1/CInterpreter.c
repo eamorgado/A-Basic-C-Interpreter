@@ -56,10 +56,10 @@ void parser(char* line,int is_file,FILE* F){
         error(is_file,F);
     }
     switch(*line){//Tests for Read/write/goto/if/label/quit/open
-        case'e':
-            if(strncmp(line+1,"screver",7)==0){
+        case'p':
+            if(strncmp(line+1,"rint",4)==0){
                 //Escrever
-                line=line+sizeof("screver");
+                line=line+sizeof("rint");
 
                 OP(I)=PRINT;
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
@@ -70,10 +70,10 @@ void parser(char* line,int is_file,FILE* F){
                 return;     
             }
         break;
-        case 'l':
-            if(strncmp(line+1,"er",2)==0){
+        case 'r':
+            if(strncmp(line+1,"ead",3)==0){
                 //ler
-                line+=sizeof("er");;
+                line+=sizeof("ead");;
                 OP(I)=READ;
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
                 KIND(FELEM(I))=STRING;
@@ -93,7 +93,9 @@ void parser(char* line,int is_file,FILE* F){
                 //printf("PC:%s\n",STRING(FELEM(I(PC(Program)))));
                 return;  
             }
-            else if(strncmp(line+1,"abel",4)==0){
+        break;
+        case 'l':
+            if(strncmp(line+1,"abel",4)==0){
                 //Label
                 line+=sizeof("abel");;
                 OP(I)=LABEL;
