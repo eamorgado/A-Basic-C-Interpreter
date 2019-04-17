@@ -24,11 +24,10 @@
 #include <ctype.h>
 #include <unistd.h>
 
+
 HashTableLabel* Labels;
 HashTableVar* Vars;
 ProcessGroup* Program;
-
-
 
 
 void createMem(){
@@ -66,7 +65,6 @@ void parser(char* line,int is_file,FILE* F){
                 KIND(FELEM(I))=STRING;
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                //printf("PC:%s\n",STRING(FELEM(I(PC(Program))))); 
                 return;     
             }
         break;
@@ -78,19 +76,15 @@ void parser(char* line,int is_file,FILE* F){
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
                 KIND(FELEM(I))=STRING;
 
-                while(!isalnum(*line))
-                    ++line;
+                while(!isalnum(*line)) ++line;
 
                 int i=0;
-                while(isalnum(*line)){
-                    ++line; i++;
-                }
+                while(isalnum(*line)){++line; i++;}
                 *line='\0';
                 line-=i;                
 
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                //printf("PC:%s\n",STRING(FELEM(I(PC(Program)))));
                 return;  
             }
         break;
@@ -101,19 +95,16 @@ void parser(char* line,int is_file,FILE* F){
                 OP(I)=LABEL;
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
                 
-                while(!isalnum(*line))
-                    ++line;
+                while(!isalnum(*line)) ++line;
 
                 int i=0;
-                while(isalnum(*line)){
-                    ++line; i++;
-                }
+                while(isalnum(*line)){ ++line; i++;}
+
                 *line='\0';
                 line-=i;  
 
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                //printf("PC:%s\n",STRING(FELEM(I(PC(Program)))));
                 return;  
             }
         break;
@@ -124,72 +115,61 @@ void parser(char* line,int is_file,FILE* F){
                 char *v; int i=0;
 
                 line+=sizeof("f");;
-                //printf("L1:%s|\n",line);
                 while(!isalnum(*line)) ++line;
-                //printf("L2:%s|\n",line);
                 while(isalnum(*line)){
                     c[i++]=*line;
                     ++line;
                 }
                 c[i]='\0'; 
-                //printf("C:%s|\n",c);               
                 v=(char*)malloc(i+1);
                     if(!v){
                         printf("Error allocating for if\n");
+                        free(line);
                         error(is_file,F);
                     }
                 strcpy(v,c);
-                //printf("V:%s|\n",v);
                 while(!isalnum(*line)) ++line;
-                //printf("L3:%s|\n",line);
                 line+=sizeof("goto");
-                //printf("L4:%s|\n",line);
+
                 while(!isalnum(*line)) ++line;
-                //printf("L5:%s|\n",line);
                 i=0;
-                while(isalnum(*line)){
-                    ++line; i++;
-                }
+                while(isalnum(*line)){++line; i++;}
+
                 *line='\0';
                 line-=i; 
-                //printf("L6:%s|\n",line);
                 OP(I)=IF_I;
                 KIND(TELEM(I))=EMPTY;
                 KIND(FELEM(I))=KIND(SELEM(I))=STRING;
-                STRING(FELEM(I))=v;
-                STRING(SELEM(I))=line;
+                //(IF_I,label,var,EMPTY)
+                STRING(FELEM(I))=line; 
+                STRING(SELEM(I))=v;
                 addProcess(I,Program);
-                //printf("PC Cond:%s|\nPc Label:%s|\n",STRING(FELEM(I(PC(Program)))),STRING(SELEM(I(PC(Program)))));
                 return;      
             }
         break;
         case 'g':
             if(strncmp(line+1,"oto",3)==0){
                 //goto
-                //printf("L1:%s|\n",line);
                 line+=sizeof("oto");
-                //printf("L2:%s|\n",line);
+
                 while(!isalnum(*line)) ++line;
-                //printf("L3:%s|\n",line);
                 int i=0;
-                while(isalnum(*line)){
-                    ++line; i++;
-                }
+                while(isalnum(*line)){++line; i++;}
+
                 *line='\0';
                 line-=i;
-                //printf("L4:%s|\n",line);
                 OP(I)=GOTO_I;
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
                 KIND(FELEM(I))=STRING;
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                //printf("PC:%s\n",STRING(FELEM(I(PC(Program)))));
                 return;
             }
         break;
         case 'q':
             if(strncmp(line+1,"uit",3)==0){
                 printf("Bye\n");
+                free(line);
                 error(is_file,F);
             }
         break;
@@ -202,11 +182,13 @@ void parser(char* line,int is_file,FILE* F){
                     FILE* fp=fopen(line,"r");
                     if(fp==NULL){
                         printf("Error While Opening %s\n",line);
+                        free(line);
                         error(is_file,F);
                     }
                     shellFile(fp);
                 }
                 printf("File Does Not exist\n");
+                free(line);
                 error(is_file,F);
             }
         break;
@@ -215,37 +197,31 @@ void parser(char* line,int is_file,FILE* F){
     char c[256];
     char* v;
     int i=0;
+
     while(!isalnum(*line)) ++line;
-    //printf("L1:%s|\n",line);
-    while(isalnum(*line))
-        c[i++]=*line++;
+    while(isalnum(*line))  c[i++]=*line++;
     c[i]='\0';
-    //printf("L2:%s|\n",line);
-    //printf("C:%s|\n",c);
+    
     v=(char*)malloc(i+1);
         if(!v){
             printf("Error Allocating for Var in Expression\n");
+            free(line);
             error(is_file,F);
         }
     strcpy(v,c);
-    //printf("V:%s|\n",v);
     
     while(*line==' ')++line;
-    //printf("L3:%s|\n",line);
     switch (*line){
         case '=':
             line++;
             OP(I)=ATRIB;
-            //printf("A1:%s|\n",line);
             while(*line==' ') ++line;
-            //printf("A2:%s|\n",line);
-
+            
             KIND(TELEM(I))=EMPTY;
             KIND(FELEM(I))=KIND(SELEM(I))=STRING;
             STRING(FELEM(I))=v;
             STRING(SELEM(I))=line;
             addProcess(I,Program);
-            //printf("PC_Var-A:%s|\nPC_Exp-A:%s|\n",STRING(FELEM(I(PC(Program)))),STRING(SELEM(I(PC(Program)))));
             return;
         break;
         case '+': OP(I)=ADD; break;
@@ -255,36 +231,28 @@ void parser(char* line,int is_file,FILE* F){
         case '%': OP(I)=MOD; break;
         default:
             printf("Invalid Format\n");
+            free(line);
             error(is_file,F);
         break;
     }
-    if(*++line=='='){
-        line++;
-        //printf("L4:%s|\n",line);
-        while(*line==' ')++line;
-        //printf("L5:%s|\n",line);
-        KIND(FELEM(I))=KIND(SELEM(I))=KIND(TELEM(I))=STRING;
-        STRING(FELEM(I))=STRING(SELEM(I))=v;
-        STRING(TELEM(I))=line;
-        addProcess(I,Program);
-        /*switch(OP(I)){
-            case ADD: printf("Add\n"); break;
-            case SUB: printf("Sub\n"); break;
-            case MUL: printf("Mul\n"); break;
-            case DIV: printf("Div\n"); break;
-        }
-        printf("PC_Var:%s|\nPC_Var2:%s|\nPC_Exp:%s|\n",STRING(FELEM(I(PC(Program)))),STRING(SELEM(I(PC(Program)))),STRING(TELEM(I(PC(Program)))));
-        */return;
+    if(*++line!='='){
+        printf("Invalid Format\n");
+        free(line);
+        error(is_file,F);
     }
-    printf("Invalid Format\n");
-    error(is_file,F);
+    line++;
+    while(*line==' ')++line;
+    
+    KIND(FELEM(I))=KIND(SELEM(I))=KIND(TELEM(I))=STRING;
+    STRING(FELEM(I))=STRING(SELEM(I))=v;
+    STRING(TELEM(I))=line;
+    addProcess(I,Program);
+    return;
 }
 int execute(int loop,int is_file,FILE* F){
-    //printf("Instruction:%d\n",OP(I((PC(Program)))));
     if(loop==1){        
         int brek=execute(0,is_file,F);
         if(brek==1 && NEXTP(PC(Program))!=NULL){
-            //execute(0);
             PC(Program)=NEXTP(PC(Program));
             execute(1,is_file,F);
         }        
@@ -296,9 +264,7 @@ int execute(int loop,int is_file,FILE* F){
     int result;
     switch (OP(I)){
         case PRINT:
-            //printf("R:%d|\nV:%s|\n",contains(Vars,"k"),STRING(FELEM(I)));                
             printf("%d\n",parseFormula(STRING(FELEM(I)),Vars));
-            //PC(Program)=NEXTP(PC(Program));
             return 1;
         break;
         case READ:
@@ -310,9 +276,7 @@ int execute(int loop,int is_file,FILE* F){
             printf("Enter Value:");
             char *new,*var;
             char c,aux[256];
-            do{
-                c=getchar();
-            }while(c==' ' && c!='\n');
+            do{ c=getchar(); }while(c==' ' && c!='\n');
             if(c=='\n'){
                 printf("Not a value %c|\n",c);
                 return execute(0,0,F);
@@ -329,9 +293,6 @@ int execute(int loop,int is_file,FILE* F){
                 error(is_file,F);
             }
             strcpy(new,aux);            
-            //printf("%s\n",new);
-            //strcpy(var,STRING(FELEM(I)));
-            //printf("%s\n",STRING(FELEM(I)));
             if(contains(Vars,STRING(FELEM(I)))==0){
                 e=(Elem*)malloc(sizeof(Elem));
                 if(!e){
@@ -341,15 +302,12 @@ int execute(int loop,int is_file,FILE* F){
                 PKIND(e)=STRING;
                 PSTRING(e)=new;
                 put(Vars,STRING(FELEM(I)),e);
-                //printf("R:%d|\n",contains(Vars,STRING(FELEM(I))));
                 return 1;
             }
             old=getHash(Vars,STRING(FELEM(I)));
             result=parseFormula(new,Vars);
             PKIND(old)=INT_CONST;
             PVAL(old)=result;
-            //printf("RN:%d|\n",contains(Vars,STRING(FELEM(I))));
-            //PC(Program)=NEXTP(PC(Program));
             return 1;
         break;
         case ATRIB:
@@ -362,83 +320,10 @@ int execute(int loop,int is_file,FILE* F){
                 PKIND(e)=STRING;
                 PSTRING(e)=STRING(SELEM(I));
                 put(Vars,STRING(FELEM(I)),e);
-                //printf("R:%d|\n",contains(Vars,STRING(FELEM(I))));
                 return 1;
             }
             old=getHash(Vars,STRING(FELEM(I)));
             result=parseFormula(STRING(SELEM(I)),Vars);
-            PKIND(old)=INT_CONST;
-            PVAL(old)=result;
-            PC(Program)=NEXTP(PC(Program));
-            return 1;
-        break;
-        case ADD:
-            if(contains(Vars,STRING(FELEM(I)))==0){
-                printf("Var not initilised\n");
-                error(is_file,F);
-            }
-            old=getHash(Vars,STRING(FELEM(I)));
-            result=parseFormula(STRING(FELEM(I)),Vars);
-            //printf("Re:%d\n",result);
-            result+=parseFormula(STRING(TELEM(I)),Vars);
-            //printf("Re:%d\n",result);            
-            PKIND(old)=INT_CONST;
-            PVAL(old)=result;
-            //PC(Program)=NEXTP(PC(Program));
-            return 1;
-        break;
-        case SUB:
-            if(contains(Vars,STRING(FELEM(I)))==0){
-                printf("Var not initilised\n");
-                error(is_file,F);
-            }
-            old=getHash(Vars,STRING(FELEM(I)));
-            result=parseFormula(STRING(FELEM(I)),Vars);
-            //printf("Re:%d\n",result);
-            result-=parseFormula(STRING(TELEM(I)),Vars);
-            //printf("Re:%d\n",result);            
-            PKIND(old)=INT_CONST;
-            PVAL(old)=result;
-            return 1;
-        break;
-        case DIV:
-            if(contains(Vars,STRING(FELEM(I)))==0){
-                printf("Var not initilised\n");
-                error(is_file,F);
-            }
-            old=getHash(Vars,STRING(FELEM(I)));
-            result=parseFormula(STRING(FELEM(I)),Vars);
-            //printf("Re:%d\n",result);
-            result/=parseFormula(STRING(TELEM(I)),Vars);
-            //printf("Re:%d\n",result);            
-            PKIND(old)=INT_CONST;
-            PVAL(old)=result;
-            return 1;
-        break;
-        case MUL:
-            if(contains(Vars,STRING(FELEM(I)))==0){
-                printf("Var not initilised\n");
-                error(is_file,F);
-            }
-            old=getHash(Vars,STRING(FELEM(I)));
-            result=parseFormula(STRING(FELEM(I)),Vars);
-            //printf("Re:%d\n",result);
-            result*=parseFormula(STRING(TELEM(I)),Vars);
-            //printf("Re:%d\n",result);            
-            PKIND(old)=INT_CONST;
-            PVAL(old)=result;
-            return 1;
-        break;
-        case MOD:
-            if(contains(Vars,STRING(FELEM(I)))==0){
-                printf("Var not initilised\n");
-                error(is_file,F);
-            }
-            old=getHash(Vars,STRING(FELEM(I)));
-            result=parseFormula(STRING(FELEM(I)),Vars);
-            //printf("Re:%d\n",result);
-            result%=parseFormula(STRING(TELEM(I)),Vars);
-            //printf("Re:%d\n",result);            
             PKIND(old)=INT_CONST;
             PVAL(old)=result;
             return 1;
@@ -451,34 +336,40 @@ int execute(int loop,int is_file,FILE* F){
             return 1;
         break;
         case GOTO_I:
+        case IF_I:
             if(containsLabel(Labels,STRING(FELEM(I)))==0){
                 printf("Label doesn't exist\n");
-                //error(is_file,F);
                 return 1;
+            }
+            if(OP(I)==IF_I){
+                if(contains(Vars,STRING(SELEM(I)))==0){
+                    printf("Var not initilised\n");
+                    error(is_file,F);
+                }
+                if((KIND(SELEM(I))==INT_CONST? VAL(SELEM(I)) : parseFormula(STRING(SELEM(I)),Vars))==0)
+                    return 1;
             }
             pcGoto(getLabelHash(Labels,STRING(FELEM(I))),Program);
             execute(1,is_file,F);
             return 1;
-        break;
-        case IF_I:
-            if(containsLabel(Labels,STRING(SELEM(I)))==0){
-                printf("Label doesn't exist\n");
-                error(is_file,F);
-            }
-            if(contains(Vars,STRING(FELEM(I)))==0){
+        break;  
+    }
+
+    if(contains(Vars,STRING(FELEM(I)))==0){
                 printf("Var not initilised\n");
-                //error(is_file,F);
-                return 1;
-            }
-            if(parseFormula(STRING(FELEM(I)),Vars)==0){
-                return 1;
-            }
-            else{
-                pcGoto(getLabelHash(Labels,STRING(SELEM(I))),Program);
-                execute(1,is_file,F); 
-                return 1;
-            }
-            return 0;
-        break;    
-    }    
+                error(is_file,F);
+    }
+    old=getHash(Vars,STRING(FELEM(I)));
+    //printf((PKIND(old)==INT_CONST? "Yes\n" : "No\n"));
+    result=( PKIND(old)==INT_CONST? PVAL(old) : parseFormula(STRING(FELEM(I)),Vars) );
+    switch(OP(I)){
+        case ADD: result+=parseFormula(STRING(TELEM(I)),Vars); break;
+        case SUB: result-=parseFormula(STRING(TELEM(I)),Vars); break;
+        case MUL: result*=parseFormula(STRING(TELEM(I)),Vars); break;
+        case DIV: result/=parseFormula(STRING(TELEM(I)),Vars); break;
+        case MOD: result%=parseFormula(STRING(TELEM(I)),Vars); break;
+    }
+    PKIND(old)=INT_CONST;
+    PVAL(old)=result; 
+    return 1;   
 }
