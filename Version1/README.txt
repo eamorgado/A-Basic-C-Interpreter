@@ -4,17 +4,17 @@
 This program is designed to take user instructions and execute them.
 The instructions are simple/basic:
     ->goto <label>;----jumps execution to block with given label
-    
+
     ->label <namelabel>;----creates a code label
-    
+
     ->print(<info>);----displays var information or expression result
-    
+
     ->read(<var>);---creates/updates a var
         Note that on the read, once you input the value do not give <;> but <\n>
-    ->open <file>;--changes interpreter mode and reads from file 
-    
+    ->open <file>;--changes interpreter mode and reads from file
+
     ->quit;--terminates execution and exits the interpreter
-    
+
     -><var>=<exp>;---creates/updates a var with the value of <exp>
     -><var>+=<exp>;---adds the value of <exp> to <var> and updates <var>
     -><var>-=<exp>;---subtracts the value of <exp> to <var> ,updates <var>
@@ -25,45 +25,41 @@ The instructions are simple/basic:
 
 This implementation has several files:
     ->Structures.h--representation of data
-    
+
     ->ParserExpression.(h/c)--descendent recursive parser for <exp>
-    
+
     ->LinkedListHashVar.(h/c)--list of variables in an index of Hashtable<var>
     ->HashTableVar.(h/c)--HashTable to store <var>, supported by LinkedList
-    
+
     ->LinkedListHashLabel.(h/c)--list of labels in an index of Hahtable<label>
     ->HashTableLabel.(h/c)--HashTable to store <label>, supported by LinkedList
-    
-    ->LinkedListProgramSequence.(h/c)--list of <process> to store execution sequence
-    
-    ->CInterpreter.(h/c)--the actual interpreter, contains the main code of
-        parsing a command and executing it 
 
-    ->Shell(File/Interactive).(h/c)--the two modes of the interpreter, reading 
+    ->LinkedListProgramSequence.(h/c)--list of <process> to store execution sequence
+
+    ->CInterpreter.(h/c)--the actual interpreter, contains the main code of
+        parsing a command and executing it
+
+    ->Shell(File/Interactive).(h/c)--the two modes of the interpreter, reading
         from a given file (.txt/.text) and reading from real-time commands, each
         one of them implements an REPL (Read-Execute-Print-Loop) system, where
         the parsing and execution of a command read is done by CInterpreter
-    
+
     ->Main.(h/c)--initialiser for this program, depending on the lauching method
         it picks one of the Shell(<>).c files:
             ./Main <file>.<text/txt> -->ShellFile
             ./Main -->ShellInteractive
 
+    The .h file are stored in the include/ directory, the .c files in the src/
+        directory and the created objects .o in obj/ directory
 
 To compile and execute this program:
-    $ gcc -c *.c
-    $ ar -rc <lib>.a *.o
-    $ ranlib <lib>.a
-    $ gcc Main.c -L. <lib>.a -o Main
-    $ ./Main [<file>]
+    $ make exe  -->creates the executable file
+    $ ./exe [<file>]
+make    -->this creates the package with the headers in include/
 
-    Example: $ gcc -c *.c
-             $ ar -rc project.a *.o
-             $ ranlib project.a
-             $ gcc Main.c -L. project.a -o Main
-             $ ./Main
+To eliminate the compiled objects: $ make clean
 
-This program was made in a 64 bits Windows 10 Home with 16 GB of RAM, 
+This program was made in a 64 bits Windows 10 Home with 16 GB of RAM,
     Intel Core i7-8550U CPU @ 1.80GHz 1.99 GHz 8 cores
 
 All the files can be accessed in https://github.com/eamorgado/A-Basic-C-Interpreter

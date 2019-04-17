@@ -65,7 +65,7 @@ void parser(char* line,int is_file,FILE* F){
                 KIND(FELEM(I))=STRING;
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                return;     
+                return;
             }
         break;
         case 'r':
@@ -81,11 +81,11 @@ void parser(char* line,int is_file,FILE* F){
                 int i=0;
                 while(isalnum(*line)){++line; i++;}
                 *line='\0';
-                line-=i;                
+                line-=i;
 
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                return;  
+                return;
             }
         break;
         case 'l':
@@ -94,18 +94,18 @@ void parser(char* line,int is_file,FILE* F){
                 line+=sizeof("abel");;
                 OP(I)=LABEL;
                 KIND(SELEM(I))=KIND(TELEM(I))=EMPTY;
-                
+
                 while(!isalnum(*line)) ++line;
 
                 int i=0;
                 while(isalnum(*line)){ ++line; i++;}
 
                 *line='\0';
-                line-=i;  
+                line-=i;
 
                 STRING(FELEM(I))=line;
                 addProcess(I,Program);
-                return;  
+                return;
             }
         break;
         case 'i':
@@ -120,7 +120,7 @@ void parser(char* line,int is_file,FILE* F){
                     c[i++]=*line;
                     ++line;
                 }
-                c[i]='\0'; 
+                c[i]='\0';
                 v=(char*)malloc(i+1);
                     if(!v){
                         printf("Error allocating for if\n");
@@ -136,15 +136,15 @@ void parser(char* line,int is_file,FILE* F){
                 while(isalnum(*line)){++line; i++;}
 
                 *line='\0';
-                line-=i; 
+                line-=i;
                 OP(I)=IF_I;
                 KIND(TELEM(I))=EMPTY;
                 KIND(FELEM(I))=KIND(SELEM(I))=STRING;
                 //(IF_I,label,var,EMPTY)
-                STRING(FELEM(I))=line; 
+                STRING(FELEM(I))=line;
                 STRING(SELEM(I))=v;
                 addProcess(I,Program);
-                return;      
+                return;
             }
         break;
         case 'g':
@@ -201,7 +201,7 @@ void parser(char* line,int is_file,FILE* F){
     while(!isalnum(*line)) ++line;
     while(isalnum(*line))  c[i++]=*line++;
     c[i]='\0';
-    
+
     v=(char*)malloc(i+1);
         if(!v){
             printf("Error Allocating for Var in Expression\n");
@@ -209,14 +209,14 @@ void parser(char* line,int is_file,FILE* F){
             error(is_file,F);
         }
     strcpy(v,c);
-    
+
     while(*line==' ')++line;
     switch (*line){
         case '=':
             line++;
             OP(I)=ATRIB;
             while(*line==' ') ++line;
-            
+
             KIND(TELEM(I))=EMPTY;
             KIND(FELEM(I))=KIND(SELEM(I))=STRING;
             STRING(FELEM(I))=v;
@@ -230,7 +230,7 @@ void parser(char* line,int is_file,FILE* F){
         case '/': OP(I)=DIV; break;
         case '%': OP(I)=MOD; break;
         default:
-            printf("Invalid Format\n");
+            printf("Action %s not Supported\n",*line);
             free(line);
             error(is_file,F);
         break;
@@ -242,7 +242,7 @@ void parser(char* line,int is_file,FILE* F){
     }
     line++;
     while(*line==' ')++line;
-    
+
     KIND(FELEM(I))=KIND(SELEM(I))=KIND(TELEM(I))=STRING;
     STRING(FELEM(I))=STRING(SELEM(I))=v;
     STRING(TELEM(I))=line;
@@ -250,12 +250,12 @@ void parser(char* line,int is_file,FILE* F){
     return;
 }
 int execute(int loop,int is_file,FILE* F){
-    if(loop==1){        
+    if(loop==1){
         int brek=execute(0,is_file,F);
         if(brek==1 && NEXTP(PC(Program))!=NULL){
             PC(Program)=NEXTP(PC(Program));
             execute(1,is_file,F);
-        }        
+        }
         return 1;
     }
     Process* P=PC(Program);
@@ -292,7 +292,7 @@ int execute(int loop,int is_file,FILE* F){
                 printf("Error reading value\n");
                 error(is_file,F);
             }
-            strcpy(new,aux);            
+            strcpy(new,aux);
             if(contains(Vars,STRING(FELEM(I)))==0){
                 e=(Elem*)malloc(sizeof(Elem));
                 if(!e){
@@ -352,7 +352,7 @@ int execute(int loop,int is_file,FILE* F){
             pcGoto(getLabelHash(Labels,STRING(FELEM(I))),Program);
             execute(1,is_file,F);
             return 1;
-        break;  
+        break;
     }
 
     if(contains(Vars,STRING(FELEM(I)))==0){
@@ -370,6 +370,6 @@ int execute(int loop,int is_file,FILE* F){
         case MOD: result%=parseFormula(STRING(TELEM(I)),Vars); break;
     }
     PKIND(old)=INT_CONST;
-    PVAL(old)=result; 
-    return 1;   
+    PVAL(old)=result;
+    return 1;
 }

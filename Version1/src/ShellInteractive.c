@@ -1,55 +1,55 @@
 /*******************************************************************************
-| Program: An Implementation of the interpreter for File mode                  |
+| Program: An Implementation of the interpreter for Interactie mode            |
 | Last Updated: 4/4/2019       FCUP       Copyright (c) 2019, Eduardo Morgado  |
 ********************************************************************************
 |   The program functionality:                                                 |
-|       ->Works almost like the interactive mode except it will read from file |
+|       ->This mode is the default, if the program is executed without giving a|
+|           text file the program will work by user input there you can also   |
+|           open a file and change the instruction                             |
 *******************************************************************************/
 #include "CInterpreter.h"
-#include "ShellFile.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
 
-char* readFile(FILE* F){
-    /*
-     * Reades from the file and allocates the instruction in memory
-     */
+
+char* readInteractive(){
     char aux[100],c,*l;
     int i=0;
     do{
-        c=fgetc(F);
+        c=getchar();
     }while(!isalnum(c));
     if(c==';' || c=='\0'){
         printf("Ended\n");
-        error(1,F);
+        error(0,NULL);
     }
     do{
         aux[i++]=c;
-        c=fgetc(F);
+        c=getchar();
     }while(c!=';' && c!='\0');
     aux[i]='\0';
     l=(char*)malloc(i+1);
     if(!l){
         printf("Error reading\n");
-        error(1,F);
+        free(l);
+        error(0,NULL);
     }
     strcpy(l,aux);
     return l;
 }
-void shellFile(FILE* F){
+void shellInteractive(){
     /*
-     * The open function, executes the REPL, the functions createMem, error, 
-     *      parser and execute are the general CInterpreter. 
+     * Open Function, initiates the REPL
      */
-    createMem();    
+    createMem();
     int status=1;
     do{
-        parser(readFile(F),1,F);
-        status=execute(0,1,F);
+        printf("C>");
+        parser(readInteractive(),0,NULL);
+        status=execute(0,0,NULL);
     }while(status==1);
     printf("Error occured in execution\n");
-    error(1,F);
+    error(0,NULL);
 }
