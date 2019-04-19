@@ -50,6 +50,16 @@ This implementation has several files:
             ./Main <file>.<text/txt> -->ShellFile
             ./Main -->ShellInteractive
 
+The .h file are stored in the include/ directory, the .c files in the src/
+        directory and the created objects .o in obj/ directory
+
+To compile and execute this program:
+
+    $ make exe  -->creates the executable file
+    $ ./exe [<file>]
+make    -->this creates the package with the headers in include/
+
+To eliminate the compiled objects: $ make clean
 
 A grammar for this program can be as follows:
 
