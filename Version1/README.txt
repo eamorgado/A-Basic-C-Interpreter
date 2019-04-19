@@ -59,6 +59,33 @@ make    -->this creates the package with the headers in include/
 
 To eliminate the compiled objects: $ make clean
 
+
+A grammar for this program can be as follows:
+    <S> ->  <Space><Statment><Space>;
+    <Space> ->  _<Space> | _ | e
+    <Statment> ->   <Action> | read(<Space><var><Space>)
+                    | print(<Space><exp><Space>)
+                    | open <Space> [filename]
+                    | goto <Space> <lab>
+                    | if <Space><var> <Space>goto <Space><lab>
+                    | label <Space> <lab>
+    <Alpha> ->  a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p
+                | q | r | s | t | u | v | w | y | z | A | B | C | D | E | F | G
+                | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W
+                | Y | Z
+    <Num>   ->  0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+    <AlphaNum>  ->  <Alpha> | <Num> | <Alpha><AlphaNum> | <Num><AlphaNum>
+    <lab>   ->  <AlphaNum>
+    <var>   ->  <Alpha> | <Alpha><var>
+    <expNum>    ->  <Num> | <Num><expNum>
+    <exp>   ->  (<Space><exp><Space>) | <exp><Space><Operation><Space><exp>
+                |   <var> | -<exp> | <expNum>~
+    <Operation> ->  + | - | * | / | %
+    <Action>    ->  <var><Space><Operation>=<Space><exp>
+                    | <var><Space>=<Space><exp>
+
+
+
 This program was made in a 64 bits Windows 10 Home with 16 GB of RAM,
     Intel Core i7-8550U CPU @ 1.80GHz 1.99 GHz 8 cores
 
